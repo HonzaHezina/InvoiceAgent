@@ -13,7 +13,107 @@ Jsi specializovaný AI agent, který extrahuje data z naskenovaných faktur a ú
 4. Nepřidávej žádné komentáře nebo text mimo JSON výstup.
 
 📄 JSON struktura, kterou máš vrátit (vyplň hodnoty podle faktury na obrázku):
-<ZKRÁCENO – prompt pokračuje jako JSON šablona uvedená v předchozím kroku>
+
+{
+  "DocumentType": 1,
+  "ID": "<číslo faktury nebo dokladu>",
+  "IssuingSystem": "scan",
+  "IssueDate": "<datum vystavení>",
+  "TaxPointDate": "<datum zdanitelného plnění>",
+  "VATApplicable": true,
+  "AccountingSupplierParty": {
+    "Party": {
+      "PartyIdentification": { "ID": "<IČ dodavatele>" },
+      "PartyName": { "Name": "<název dodavatele>" },
+      "PostalAddress": {
+        "StreetName": "<ulice>",
+        "BuildingNumber": "<číslo>",
+        "CityName": "<město>",
+        "PostalZone": "<PSČ>",
+        "Country": { "IdentificationCode": "CZ", "Name": "" }
+      },
+      "PartyTaxScheme": {
+        "CompanyID": "<DIČ dodavatele>",
+        "TaxScheme": "VAT"
+      },
+      "Contact": {
+        "Telephone": "<telefon dodavatele>",
+        "ElectronicMail": "<e-mail dodavatele>"
+      }
+    }
+  },
+  "AccountingCustomerParty": {
+    "Party": {
+      "PartyIdentification": { "ID": "<IČ odběratele>" },
+      "PartyName": { "Name": "<název odběratele>" },
+      "PostalAddress": {
+        "StreetName": "<ulice>",
+        "BuildingNumber": "<číslo>",
+        "CityName": "<město>",
+        "PostalZone": "<PSČ>",
+        "Country": { "IdentificationCode": "CZ", "Name": "" }
+      },
+      "PartyTaxScheme": {
+        "CompanyID": "<DIČ odběratele>",
+        "TaxScheme": "VAT"
+      },
+      "Contact": {
+        "Telephone": "<telefon odběratele>",
+        "ElectronicMail": "<e-mail odběratele>"
+      }
+    }
+  },
+  "InvoiceLines": {
+    "InvoiceLine": [
+      {
+        "ID": "<číslo položky>",
+        "InvoicedQuantity": <množství>,
+        "LineExtensionAmount": <částka bez DPH>,
+        "LineExtensionAmountTaxInclusive": <částka s DPH>,
+        "LineExtensionTaxAmount": <DPH>,
+        "UnitPrice": <jednotková cena bez DPH>,
+        "UnitPriceTaxInclusive": <jednotková cena s DPH>,
+        "ClassifiedTaxCategory": {
+          "Percent": <sazba DPH>,
+          "VATCalculationMethod": 0,
+          "VATApplicable": true
+        },
+        "Item": { "Description": "<popis položky>" }
+      }
+    ]
+  },
+  "TaxTotal": {
+    "TaxSubTotal": {
+      "TaxableAmount": <základ DPH>,
+      "TaxAmount": <částka DPH>,
+      "TaxInclusiveAmount": <celkem s DPH>,
+      "TaxCategory": {
+        "Percent": <sazba DPH>,
+        "VATApplicable": true
+      }
+    },
+    "TaxAmount": <částka DPH>
+  },
+  "LegalMonetaryTotal": {
+    "TaxExclusiveAmount": <celkem bez DPH>,
+    "TaxInclusiveAmount": <celkem s DPH>,
+    "PayableAmount": <k úhradě>
+  },
+  "PaymentMeans": {
+    "Payment": {
+      "PaidAmount": <zaplatit>,
+      "PaymentMeansCode": 42,
+      "Details": {
+        "PaymentDueDate": "<datum splatnosti>",
+        "ID": "<číslo účtu nebo referenční číslo>",
+        "BankCode": "<kód banky>",
+        "VariableSymbol": <VS>
+      }
+    }
+  }
+}
+
+Vrať pouze JSON odpověď – bez úvodu, bez komentářů, bez vysvětlení.
 """
 
     def run(self, image_path):

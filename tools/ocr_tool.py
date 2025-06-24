@@ -1,4 +1,5 @@
 import requests, base64, os
+import re
 
 HF_TOKEN = os.getenv("HF_TOKEN")
 API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-VL-32B-Instruct"
@@ -18,3 +19,8 @@ def extract_text_from_invoice(image_path, prompt):
     resp = requests.post(API_URL, headers=headers, json=payload)
     resp.raise_for_status()
     return resp.json().get("generated_text", "No text found.")
+
+def repair_json_if_invalid(raw_text):
+    # pokusí se vyextrahovat validní JSON blok z textu
+    match = re.search(r'{.*}', raw_text, re.DOTALL)
+    return match.group(0) if match else '{}'

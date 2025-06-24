@@ -3,7 +3,7 @@ import requests, base64, os
 HF_TOKEN = os.getenv("HF_TOKEN")
 API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-VL-32B-Instruct"
 
-def extract_text_from_invoice(image_path):
+def extract_text_from_invoice(image_path, prompt):
     with open(image_path, "rb") as f:
         img_b64 = base64.b64encode(f.read()).decode()
 
@@ -11,7 +11,7 @@ def extract_text_from_invoice(image_path):
     payload = {
         "inputs": [
             {"type": "image", "image": img_b64},
-            {"type": "text", "text": "Extract all visible text from this invoice."}
+            {"type": "text", "text": prompt}
         ]
     }
 
